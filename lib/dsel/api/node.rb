@@ -41,75 +41,16 @@ class Node
             @last_description = description
         end
 
-
         def configure( options, &block )
             @last_options = [options, block].compact
-        end
-
-        def flush_description
-            d = @last_description
-            @last_description = nil
-            d
-        end
-
-        def flush_options
-            o = @last_options
-            @last_options = nil
-            o
         end
 
         def definers
             @definers ||= []
         end
 
-        def push_definer( type, method )
-            definer = {
-                type: type.to_sym
-            }
-
-            if (options = self.flush_options)
-                definer.merge!( options: options )
-            end
-
-            if (description = self.flush_description)
-                definer.merge!( description: description )
-            end
-
-            definer.merge!(
-                method: method.to_sym
-            )
-
-            definers << definer
-            definer
-        end
-
         def call_handlers
             @call_handlers ||= []
-        end
-
-        def push_call_handler( type, method, *possible_object )
-            handler = {
-                type: type.to_sym
-            }
-
-            if !possible_object.empty?
-                handler.merge!( object: possible_object.first )
-            end
-
-            if (options = self.flush_options)
-                handler.merge!( options: options )
-            end
-
-            if (description = self.flush_description)
-                handler.merge!( description: description )
-            end
-
-            handler.merge!(
-                method: method.to_sym
-            )
-
-            call_handlers << handler
-            handler
         end
 
         def root?
@@ -134,11 +75,6 @@ class Node
 
         def parent
             @parent
-        end
-
-        def set_parent( node )
-            fail if @parent
-            @parent = node
         end
 
         def push_children( c )
@@ -200,6 +136,75 @@ class Node
 
             t
         end
+
+        # @private
+        def flush_description
+            d = @last_description
+            @last_description = nil
+            d
+        end
+
+        # @private
+        def flush_options
+            o = @last_options
+            @last_options = nil
+            o
+        end
+
+        # @private
+        def push_call_handler( type, method, *possible_object )
+            handler = {
+                type: type.to_sym
+            }
+
+            if !possible_object.empty?
+                handler.merge!( object: possible_object.first )
+            end
+
+            if (options = self.flush_options)
+                handler.merge!( options: options )
+            end
+
+            if (description = self.flush_description)
+                handler.merge!( description: description )
+            end
+
+            handler.merge!(
+                method: method.to_sym
+            )
+
+            call_handlers << handler
+            handler
+        end
+
+        # @private
+        def set_parent( node )
+            fail if @parent
+            @parent = node
+        end
+
+        # @private
+        def push_definer( type, method )
+            definer = {
+                type: type.to_sym
+            }
+
+            if (options = self.flush_options)
+                definer.merge!( options: options )
+            end
+
+            if (description = self.flush_description)
+                definer.merge!( description: description )
+            end
+
+            definer.merge!(
+                method: method.to_sym
+            )
+
+            definers << definer
+            definer
+        end
+
     end
 
 end

@@ -3,7 +3,7 @@ require 'dsel'
 
 require_relative 'support/helpers/paths'
 
-Dir.glob( "#{support_path}/{fixtures}/**/*.rb" ).each { |f| require f }
+Dir.glob( "#{support_path}/{lib,fixtures,factories}/**/*.rb" ).each { |f| require f }
 
 RSpec.configure do |config|
     # Enable flags like --only-failures and --next-failure

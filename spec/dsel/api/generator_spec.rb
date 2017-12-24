@@ -3,12 +3,7 @@ require 'spec_helper'
 RSpec.describe DSeL::API::Generator do
     let(:api_spec) { MockAPI }
     let(:api) { api_spec.new }
-    let(:clean_api_spec) do
-        Object.const_set(
-            "MockNode#{rand(9999)}".to_sym,
-            Class.new( DSeL::API::Node )
-        )
-    end
+    let(:clean_api_spec) { Factory[:clean_api_spec] }
     let(:clean_api) { clean_api_spec.new }
     subject { described_class }
 
