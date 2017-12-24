@@ -41,7 +41,7 @@ class Generator
     #   * `Symbol`: Object method.
     #   * `#call`: To be passed each object and return an Integer hash.
     def call_object_hasher=( hasher )
-        if !hasher.is_a?( Symbol ) && !handler.respond_to?( :call )
+        if hasher && !(hasher.is_a?( Symbol ) || hasher.respond_to?( :call ))
             fail ArgumentError,
                  "Expected Symbol or #call-able hasher, got: #{hasher.inspect}"
         end
@@ -60,6 +60,7 @@ class Generator
         @on_call = []
 
         @last_call_with_caller = false
+        @call_object_hasher    = false
 
         self
     end
@@ -183,8 +184,8 @@ class Generator
             next if h.is_a? Integer
 
             fail ArgumentError,
-                 "Hasher #{@call_object_hasher.insect} returned non-Integer" <<
-                 " hash #{h} for object #{object.inspect}."
+                 "Hasher #{@call_object_hasher.inspect} returned non-Integer" <<
+                 " hash #{h.inspect} for object #{object.inspect}."
         end
     end
 
@@ -219,7 +220,7 @@ class Generator
 
             # Basically a router, object-based and catch-all.
             define_method type do |*args, &block|
-                if args.any?
+                if !args.empty?
                     object      = args.shift
                     with_object = Generator.call_handler_with_object_name( __method__, object )
 

@@ -7,7 +7,7 @@ RSpec.describe DSeL do
     end
 
     describe 'examples/' do
-        let(:examples_dir) { File.dirname( __FILE__ ) + '/../examples' }
+        let(:examples_dir) { examples_path }
 
         describe 'api/' do
             let(:api_dir) { "#{examples_dir}/api/" }
