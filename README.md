@@ -59,7 +59,7 @@ And then execute:
 
 ## Examples
 
-See: `examples/`
+See: [examples/](https://github.com/sarosys/dsel/tree/master/examples/)
 
 ### API
 
@@ -81,11 +81,11 @@ Use via a Ruby script:
 require 'examples/api/my_api_ruby'
 ````
 
-See: `examples/api/`
+See: [examples/api/](https://github.com/sarosys/dsel/tree/master/examples/api/)
 
 ### DSL
 
-See: `examples/dsl/object.rb`
+See: [examples/dsl/object.rb](https://github.com/sarosys/dsel/tree/master/examples/dsl/object.rb)
 
 #### Proxy
 
@@ -94,7 +94,7 @@ just proxy methods, thus allowing the user to interact with the object as if
 operating within it semantically but without access to non-public methods or its 
 state.
 
-See: `examples/dsl/proxy.rb`
+See: [examples/dsl/proxy.rb](https://github.com/sarosys/dsel/tree/master/examples/dsl/proxy.rb)
 
 #### Direct
 
@@ -102,7 +102,7 @@ The direct way means not having the object inside the environment, but the
 environment inside the object, thus allowing you to truly operate within it and 
 make a general mess of things or do some pretty cool stuff.
 
-See: `examples/dsl/direct.rb`
+See: [examples/dsl/direct.rb](https://github.com/sarosys/dsel/tree/master/examples/dsl/direct.rb)
 
 ## Contributing
 
