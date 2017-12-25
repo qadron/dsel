@@ -19,21 +19,21 @@ module Environment
     end
 
     def child( method_name, class_name, *args, &block )
-        runner = _dsel_runner.runner_for(
+        node = _dsel_node.node_for(
             class_name,
-            namespace: _dsel_runner.context
+            namespace: _dsel_node.context
         )
-        runner.run( &block )
+        node.run( &block )
 
-        _dsel_runner.context.push_child(
+        _dsel_node.context.push_child(
             method_name,
-            runner.context,
+            node.context,
             *args
         )
     end
 
     def _dsel_import( file )
-        _dsel_runner.context.instance_eval( IO.read( file ) )
+        _dsel_node.context.instance_eval( IO.read( file ) )
     end
 
     def _dsel_caller_dir( offset = 1 )

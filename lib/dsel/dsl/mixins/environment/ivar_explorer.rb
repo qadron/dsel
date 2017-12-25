@@ -10,20 +10,20 @@ module IvarExplorer
 
         if block && first_letter == first_letter.capitalize
             ivar = "@#{name}".to_sym
-            return _dsel_runner_for_ivar( ivar, &block )
+            return _dsel_node_for_ivar( ivar, &block )
         end
 
         super( name, *args, &block )
     end
 
     # @private
-    def _dsel_runner_for_ivar( ivar, &block )
+    def _dsel_node_for_ivar( ivar, &block )
         ivar = ivar.downcase
-        if !_dsel_runner.context.instance_variable_defined?( ivar )
+        if !_dsel_node.context.instance_variable_defined?( ivar )
             fail ArgumentError, "Instance variable not defined: #{ivar}"
         end
 
-        _dsel_runner.runner_for( _dsel_runner.context.instance_variable_get( ivar ) ).run( &block )
+        _dsel_node.node_for( _dsel_node.context.instance_variable_get( ivar ) ).run( &block )
     end
 
 end

@@ -7,18 +7,18 @@ class API
 
 class Environment < Proxy::Environment
 
-    define_method "#{DSEL_RUNNER_ACCESSOR}=" do |runner|
-        super( runner )
+    define_method "#{DSEL_NODE_ACCESSOR}=" do |node|
+        super( node )
 
-        if runner
-            runner.context.class.children.keys.each do |name|
+        if node
+            node.context.class.children.keys.each do |name|
                 define_singleton_method name.capitalize do |&b|
-                    runner.runner_for( send( name ) ).run( &b )
+                    node.node_for( send( name ) ).run( &b )
                 end
             end
         end
 
-        runner
+        node
     end
 
     def also( *args, &block )

@@ -15,7 +15,12 @@ class Direct < Base
         begin
             super( script, &block )
         ensure
-            return if calling? || !@prepared
+            # Re-entry, don't touch anything.
+            return if calling?
+
+            # May not have been prepared yet.
+            return if !@environment.respond_to?( :_dsel_node )
+
             restore_context
         end
     end
@@ -41,7 +46,6 @@ class Direct < Base
         decorate_context
 
         @environment = @context
-        @prepared    = true
     end
 
     def capture_context
@@ -78,8 +82,6 @@ class Direct < Base
         @original_methods.each do |m|
             @context.define_singleton_method m.name, &m
         end
-
-        @prepared = false
     end
 
 end

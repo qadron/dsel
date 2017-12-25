@@ -21,7 +21,7 @@ RSpec.describe DSeL::DSL::Nodes::Proxy::Environment do
         expect(subject.test).to be :test
     end
 
-    describe "##{described_class::DSEL_RUNNER_ACCESSOR}=" do
+    describe "##{described_class::DSEL_NODE_ACCESSOR}=" do
         context 'when a node is given' do
             it 'undefines methods with the same name as the context' do
                 expect(subject.hash).to eq node.context.hash
@@ -30,8 +30,8 @@ RSpec.describe DSeL::DSL::Nodes::Proxy::Environment do
 
         context 'when nil is given' do
             it 'does nothing' do
-                subject._dsel_runner = nil
-                expect(subject._dsel_runner).to be_nil
+                subject._dsel_node = nil
+                expect(subject._dsel_node).to be_nil
             end
         end
     end

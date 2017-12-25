@@ -22,12 +22,12 @@ shared_examples_for DSeL::DSL::Nodes::Base::Environment do
     let(:another_node_context) { '3' }
 
     before do
-        subject.send( "#{described_class::DSEL_RUNNER_ACCESSOR}=", node )
+        subject.send( "#{described_class::DSEL_NODE_ACCESSOR}=", node )
     end
 
     describe '#instance_variables' do
-        it "excludes #{described_class::DSEL_RUNNER_IVAR}" do
-            expect(subject.instance_variables).to_not include described_class::DSEL_RUNNER_IVAR
+        it "excludes #{described_class::DSEL_NODE_IVAR}" do
+            expect(subject.instance_variables).to_not include described_class::DSEL_NODE_IVAR
         end
     end
 
@@ -71,7 +71,7 @@ shared_examples_for DSeL::DSL::Nodes::Base::Environment do
 
             it 'runs the block in the parent' do
                 node = nil
-                p = proc { node = send( self.class::DSEL_RUNNER_ACCESSOR ) }
+                p = proc { node = send( self.class::DSEL_NODE_ACCESSOR ) }
 
                 subject.Parent( &p )
 
@@ -95,7 +95,7 @@ shared_examples_for DSeL::DSL::Nodes::Base::Environment do
 
             it 'runs the block in the root' do
                 n = nil
-                p = proc { n = send( self.class::DSEL_RUNNER_ACCESSOR ) }
+                p = proc { n = send( self.class::DSEL_NODE_ACCESSOR ) }
 
                 subject.Root( &p )
 

@@ -38,9 +38,8 @@ api = DSeL::DSL::Nodes::APIBuilder.build :MyAPI do
         define :after # Enables 'def_after'.
 
         describe 'This does that and some other stuff some times...'
-        configure generator:  { do: :stuff },
-                  node:       { do: :other_stuff },
-                  runner:     { do_not: :do_stuff }
+        configure api: { do: :other_stuff },
+                  dsl: { do_not: :do_stuff }
         def_on :stuff do |*args|
             p :stuff
             p args
@@ -151,13 +150,10 @@ ap api.tree
 #                          :object => :stuff,
 #                         :options => [
 #                         [0] {
-#                             :generator => {
-#                                 :do => :stuff
-#                             },
-#                                  :node => {
+#                             :api => {
 #                                 :do => :other_stuff
 #                             },
-#                                :runner => {
+#                             :dsl => {
 #                                 :do_not => :do_stuff
 #                             }
 #                         }

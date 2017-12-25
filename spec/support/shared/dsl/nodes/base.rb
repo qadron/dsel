@@ -72,22 +72,22 @@ RUBY
         end
 
         context 'before running' do
-            it "sets ##{described_class::Environment::DSEL_RUNNER_ACCESSOR}" do
-                expect(subject.run { _dsel_runner }).to be subject
+            it "sets ##{described_class::Environment::DSEL_NODE_ACCESSOR}" do
+                expect(subject.run { _dsel_node }).to be subject
             end
         end
 
         context 'after running' do
-            it "removes ##{described_class::Environment::DSEL_RUNNER_ACCESSOR}" do
+            it "removes ##{described_class::Environment::DSEL_NODE_ACCESSOR}" do
                 subject.run { _dsel_self }
-                expect(subject.environment._dsel_runner).to be_nil
+                expect(subject.environment._dsel_node).to be_nil
             end
         end
     end
 
-    describe '#runners' do
+    describe '#nodes' do
         it 'includes self' do
-            expect(subject.runners.values).to eq [subject]
+            expect(subject.nodes.values).to eq [subject]
         end
 
         context 'when #root?' do
@@ -95,15 +95,15 @@ RUBY
 
             it 'provides access to all nodes' do
                 other
-                expect(subject.runners.values).to eq [subject, other]
+                expect(subject.nodes.values).to eq [subject, other]
             end
         end
 
         context 'when not #root?' do
             let(:other_options) { { parent: subject } }
 
-            it "delegates to root's #runners" do
-                expect(other.runners).to be subject.runners
+            it "delegates to root's #nodes" do
+                expect(other.nodes).to be subject.nodes
             end
         end
     end
@@ -138,68 +138,68 @@ RUBY
         end
     end
 
-    describe '#push_runner' do
-        context 'when given a unique runner' do
-            it 'pushes it to #runners' do
-                expect(subject.runners.values).to eq [subject]
+    describe '#cache_node' do
+        context 'when given a unique node' do
+            it 'pushes it to #nodes' do
+                expect(subject.nodes.values).to eq [subject]
 
-                subject.push_runner other
-                expect(subject.runners.values).to eq [subject, other]
+                subject.cache_node other
+                expect(subject.nodes.values).to eq [subject, other]
             end
 
             it 'returns it' do
-                expect(subject.push_runner( other )).to be other
+                expect(subject.cache_node(other )).to be other
             end
         end
 
-        context 'when given a duplicate runner' do
+        context 'when given a duplicate node' do
             it 'ignores it' do
-                expect(subject.runners.values).to eq [subject]
+                expect(subject.nodes.values).to eq [subject]
 
-                subject.push_runner other
-                subject.push_runner other_dup
+                subject.cache_node other
+                subject.cache_node other_dup
 
-                expect(subject.runners.values).to eq [subject, other]
+                expect(subject.nodes.values).to eq [subject, other]
             end
 
             it 'returns the existing one' do
-                subject.push_runner other
-                expect(subject.push_runner( other_dup )).to be other
+                subject.cache_node other
+                expect(subject.cache_node(other_dup )).to be other
             end
         end
     end
 
-    describe '#runner_for' do
-        let(:runner) { subject.runner_for( other_context ) }
+    describe '#node_for' do
+        let(:node) { subject.node_for( other_context ) }
 
         context 'when given a unique context' do
-            it 'returns a runner' do
-                expect(runner.context).to be other_context
+            it 'returns a node' do
+                expect(node.context).to be other_context
             end
 
             it 'stores it' do
-                runner
-                expect(subject.runners.values).to eq [subject, runner]
+                node
+                expect(subject.nodes.values).to eq [subject, node]
             end
         end
 
         context 'when given a duplicate context' do
             it 'ignores it' do
-                expect(subject.runners.values).to eq [subject]
+                expect(subject.nodes.values).to eq [subject]
 
-                subject.push_runner other
-                runner
+                subject.cache_node other
+                node
 
-                expect(subject.runners.values).to eq [subject, other]
+                expect(subject.nodes.values).to eq [subject, other]
             end
 
             it 'returns the existing one' do
-                subject.push_runner other
-                expect(runner).to be other
+                subject.cache_node other
+                expect(node).to be other
             end
 
             it 'sets self as #parent' do
-                expect(runner.parent).to be subject
+                expect(node.parent).to be subject
             end
         end
     end
@@ -222,9 +222,9 @@ RUBY
         end
     end
 
-    describe '#_dsel_runner' do
+    describe '#_dsel_node' do
         it 'returns self' do
-            expect(subject._dsel_runner).to be subject
+            expect(subject._dsel_node).to be subject
         end
     end
 end

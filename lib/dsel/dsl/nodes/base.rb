@@ -24,14 +24,14 @@ class Base
     def initialize( context, options = {} )
         @context = context
         @parent  = options[:parent]
-        @root    = (@parent ? @parent._dsel_runner.root : self)
+        @root    = (@parent ? @parent._dsel_node.root : self)
 
         @shared_variables = {}
-        @runners          = {}
+        @nodes            = {}
 
         # Let everyone know we're here to avoid creating an identical node for
         # this context.
-        push_runner self
+        cache_node self
     end
 
     def run( script = nil, &block )
@@ -41,7 +41,7 @@ class Base
 
         begin
             prepare_environment
-            @environment.send "#{Environment::DSEL_RUNNER_ACCESSOR}=", self
+            @environment._dsel_node = self
 
             calling do
                 if block
@@ -59,15 +59,15 @@ class Base
             return if calling?
 
             # May not have been prepared yet.
-            return if !@environment.respond_to?( Environment::DSEL_RUNNER_ACCESSOR )
+            return if !@environment.respond_to?( :_dsel_node )
 
-            @environment.send "#{Environment::DSEL_RUNNER_ACCESSOR}=", nil
+            @environment._dsel_node = nil
         end
     end
 
     # @private
-    def runners
-        root? ? @runners : @root.runners
+    def nodes
+        root? ? @nodes : @root.nodes
     end
 
     def shared_variables
@@ -79,13 +79,13 @@ class Base
     end
 
     # @private
-    def push_runner( runner )
-        runners[runner.hash] ||= runner
+    def cache_node(node )
+        nodes[node.hash] ||= node
     end
 
     # @private
-    def runner_for( context, options = {} )
-        runners[calc_runner_hash( context )] ||=
+    def node_for( context, options = {} )
+        nodes[calc_node_hash( context )] ||=
             self.class.new( context, options.merge( parent: self ) )
     end
 
@@ -94,7 +94,7 @@ class Base
     end
 
     # @private
-    def _dsel_runner
+    def _dsel_node
         self
     end
 
@@ -105,7 +105,7 @@ class Base
         fail 'Not implemented.'
     end
 
-    def calc_runner_hash( context )
+    def calc_node_hash( context )
         "#{self.class}:#{context.object_id}".hash
     end
 
