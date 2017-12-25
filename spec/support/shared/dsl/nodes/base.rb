@@ -42,6 +42,15 @@ RUBY
             f.path
         end
 
+        it 'preserves the same environment between runs' do
+            subject.run{}
+
+            e = subject.environment
+            subject.run{}
+
+            expect(subject.environment).to be e
+        end
+
         describe 'script' do
             it 'runs the script within the context' do
                 expect(subject.run( file )).to be context
@@ -168,7 +177,7 @@ RUBY
                 expect(runner.context).to be other_context
             end
 
-            it 'returns it' do
+            it 'stores it' do
                 runner
                 expect(subject.runners.values).to eq [subject, runner]
             end
