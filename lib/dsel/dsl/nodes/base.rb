@@ -5,31 +5,33 @@ module Nodes
 class Base
     require_relative 'base/environment'
 
+    # @return   [Object]
     attr_reader :context
+
+    # @return   [Environment]
     attr_reader :environment
+
+    # @return   [Base, nil]
     attr_reader :parent
+
+    # @return   [Base]
+    #   `self` if {#root?}.
     attr_reader :root
 
+    # @param   [Object] context
+    # @param   [Hash] options
+    # @option   options [Base, nil] :parent (nil)
     def initialize( context, options = {} )
         @context = context
-
-        @parent = options[:parent]
-
-        @root_runner   = nil
-        @parent_runner = nil
-        if !@parent
-            @parent = self
-            @root   = self
-
-            @parent_runner = self
-            @root_runner   = self
-        else
-            @root = @parent._dsl_runner.root
-            @root.runners[@context.object_id] = self
-        end
+        @parent  = options[:parent]
+        @root    = (@parent ? @parent._dsl_runner.root : self)
 
         @shared_variables = {}
         @runners          = {}
+
+        # Let everyone know we're here to avoid creating an identical node for
+        # this context.
+        push_runner self
     end
 
     def run( script = nil, &block )
@@ -37,28 +39,34 @@ class Base
             fail ArgumentError, 'Cannot use both script and &block.'
         end
 
-        prepare_environment
-        @environment._dsl_runner = self
+        begin
+            prepare_environment
+            @environment.send "#{Environment::DSL_RUNNER_ACCESSOR}=", self
 
-        calling do
-            if block
-                return @environment.instance_eval( &block )
-            end
+            calling do
+                if block
+                    return @environment.instance_eval( &block )
+                end
 
-            if script
-                @environment.instance_eval do
-                    return eval( IO.read( script ) )
+                if script
+                    @environment.instance_eval do
+                        return eval( IO.read( script ) )
+                    end
                 end
             end
+        ensure
+            # Re-entry, don't touch anything.
+            return if calling?
+
+            # May not have been prepared yet.
+            return if !@environment.respond_to?( Environment::DSL_RUNNER_ACCESSOR )
+
+            @environment.send "#{Environment::DSL_RUNNER_ACCESSOR}=", nil
         end
-    ensure
-        return if calling?
-        @environment._dsl_runner = nil
     end
 
     # @private
     def runners
-        # TODO: Is this necessary?
         root? ? @runners : @root.runners
     end
 
@@ -72,7 +80,7 @@ class Base
 
     # @private
     def push_runner( runner )
-        runners[runner] ||= runner
+        runners[runner.hash] ||= runner
     end
 
     # @private
