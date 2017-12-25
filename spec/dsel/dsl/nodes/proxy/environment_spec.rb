@@ -21,7 +21,7 @@ RSpec.describe DSeL::DSL::Nodes::Proxy::Environment do
         expect(subject.test).to be :test
     end
 
-    describe "##{described_class::DSL_RUNNER_ACCESSOR}=" do
+    describe "##{described_class::DSEL_RUNNER_ACCESSOR}=" do
         context 'when a node is given' do
             it 'undefines methods with the same name as the context' do
                 expect(subject.hash).to eq node.context.hash
@@ -30,35 +30,9 @@ RSpec.describe DSeL::DSL::Nodes::Proxy::Environment do
 
         context 'when nil is given' do
             it 'does nothing' do
-                subject._dsl_runner = nil
-                expect(subject._dsl_runner).to be_nil
+                subject._dsel_runner = nil
+                expect(subject._dsel_runner).to be_nil
             end
-        end
-    end
-
-    describe '#shared_variables' do
-        it 'delegates to node' do
-            expect(subject.shared_variables).to be node.shared_variables
-        end
-    end
-
-    describe '#root?' do
-        it 'delegates to node' do
-            expect(node).to receive(:root?).and_return(1)
-            expect(subject.root?).to be 1
-        end
-    end
-
-    describe '#real_self' do
-        it 'returns the context' do
-            expect(subject.real_self).to be node.context
-        end
-    end
-
-    describe '#variables' do
-        it 'returns instance variables' do
-            subject.instance_variable_set( :@tmp, 1 )
-            expect(subject.variables).to eq( tmp: 1 )
         end
     end
 
@@ -69,7 +43,7 @@ RSpec.describe DSeL::DSL::Nodes::Proxy::Environment do
 
         context 'when self responds' do
             it 'returns true' do
-                expect(subject).to respond_to :variables
+                expect(subject).to respond_to :_dsel_variables
             end
         end
 

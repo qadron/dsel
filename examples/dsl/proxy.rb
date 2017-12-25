@@ -1,6 +1,6 @@
 require 'dsel/ruby/object'
 
-MyClass.new.as_dsl do
+MyClass.new.as_dsel do
     # p private_method
     # => NameError
 
@@ -66,7 +66,7 @@ MyClass.new.as_dsl do
     p Iv4 { @only_visible_to_Iv4 }
     # => true
 
-    set = create_set.as_dsl do
+    set = create_set.as_dsel do
         merge [1,2,3,4]
     end
 

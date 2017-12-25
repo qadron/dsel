@@ -7,7 +7,7 @@ class API
 
 class Environment < Proxy::Environment
 
-    define_method "#{DSL_RUNNER_ACCESSOR}=" do |runner|
+    define_method "#{DSEL_RUNNER_ACCESSOR}=" do |runner|
         super( runner )
 
         if runner
@@ -31,7 +31,7 @@ class Environment < Proxy::Environment
         # If so, treat it as object.
         # If not, use the last object and assume arguments.
         if last_call.include?( :object ) &&
-            !real_self.class.has_call_handler?( type, args.first )
+            !_dsel_self.class.has_call_handler?( type, args.first )
 
             args.unshift last_call[:object]
         end

@@ -1,7 +1,7 @@
 p self.class
 # => DSeL::DSL::Nodes::API::Environment
 
-p real_self
+p _dsel_self
 # => #<MyAPI ..>
 
 to :start, :this do
@@ -18,7 +18,7 @@ end
 
 Section_1 {
 
-    p real_self
+    p _dsel_self
     # => #<MyAPI::Section_1 ..>
 
     on :stuff, :other_stuff
@@ -31,7 +31,7 @@ Section_1 {
 
     Section_1_0 {
 
-        p real_self
+        p _dsel_self
         # => #<MyAPI::Section_1::Section_1_0 ..>
 
         before :this, :that; also :the, :other; also :last, 'I promise.'
@@ -43,22 +43,22 @@ Section_1 {
         # => [:last, "I promise."]
 
         Parent {
-            p real_self
+            p _dsel_self
             # => #<MyAPI::Section_1 ..>
         }
 
         Root {
-            p real_self
+            p _dsel_self
             # => #<MyAPI ..>
         }
     }
 }
 
-p real_self
+p _dsel_self
 # => #<MyAPI ..>
 
 Section_2 {
-    p real_self
+    p _dsel_self
     # => #<MyAPI::Section_2 ..>
 
     after :more_stuff, :even_more_stuff

@@ -1,51 +1,51 @@
 class Object
 
-    def as_dsl( parent = nil, &block )
-        _dsl_determine_runner( DSeL::DSL::Nodes::Proxy, parent ).run( &block )
+    def as_dsel( parent = nil, &block )
+        _dsel_determine_runner( DSeL::DSL::Nodes::Proxy, parent ).run( &block )
     end
 
-    def dsl_script( script, parent = nil )
-        _dsl_determine_runner( DSeL::DSL::Nodes::Proxy, parent ).run( script )
+    def dsel_script( script, parent = nil )
+        _dsel_determine_runner( DSeL::DSL::Nodes::Proxy, parent ).run( script )
     end
 
-    def as_direct_dsl( parent = nil, &block )
-        _dsl_determine_runner( DSeL::DSL::Nodes::Direct, parent ).run( &block )
+    def as_direct_dsel( parent = nil, &block )
+        _dsel_determine_runner( DSeL::DSL::Nodes::Direct, parent ).run( &block )
     end
 
-    def direct_dsl_script( script, parent = nil )
-        _dsl_determine_runner( DSeL::DSL::Nodes::Direct, parent ).run( script )
+    def direct_dsel_script( script, parent = nil )
+        _dsel_determine_runner( DSeL::DSL::Nodes::Direct, parent ).run( script )
     end
 
-    def DSL( object = self, &block )
-        object.as_dsl( _dsl_self_if_runner, &block )
+    def DSeL( object = self, &block )
+        object.as_dsel( _dsel_self_if_runner, &block )
     end
 
-    def DSLScript( script, object = self )
-        object.dsl_script( script, _dsl_self_if_runner )
+    def DSeLScript( script, object = self )
+        object.dsel_script( script, _dsel_self_if_runner )
     end
 
-    def DirectDSL( object = self, &block )
-        object.as_direct_dsl( _dsl_self_if_runner, &block )
+    def DirectDSeL( object = self, &block )
+        object.as_direct_dsel( _dsel_self_if_runner, &block )
     end
 
-    def DirectDSLScript( script, object = self )
-        object.direct_dsl_script( script, _dsl_self_if_runner )
+    def DirectDSeLScript( script, object = self )
+        object.direct_dsel_script( script, _dsel_self_if_runner )
     end
 
     private
 
-    def _dsl_self_if_runner
-        respond_to?( DSeL::DSL::Nodes::Base::Environment::DSL_RUNNER_ACCESSOR ) ? self : nil
+    def _dsel_self_if_runner
+        respond_to?( DSeL::DSL::Nodes::Base::Environment::DSEL_RUNNER_ACCESSOR ) ? self : nil
     end
 
-    def _dsl_determine_runner( klass, parent = nil )
+    def _dsel_determine_runner( klass, parent = nil )
         return klass.new( self ) if !parent
 
-        if parent._dsl_runner.is_a?( klass )
-            parent._dsl_runner.runner_for( self )
+        if parent._dsel_runner.is_a?( klass )
+            parent._dsel_runner.runner_for( self )
         else
             runner = klass.new( self, parent: parent )
-            parent._dsl_runner.push_runner runner
+            parent._dsel_runner.push_runner runner
             runner
         end
     end

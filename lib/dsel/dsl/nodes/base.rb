@@ -24,7 +24,7 @@ class Base
     def initialize( context, options = {} )
         @context = context
         @parent  = options[:parent]
-        @root    = (@parent ? @parent._dsl_runner.root : self)
+        @root    = (@parent ? @parent._dsel_runner.root : self)
 
         @shared_variables = {}
         @runners          = {}
@@ -41,7 +41,7 @@ class Base
 
         begin
             prepare_environment
-            @environment.send "#{Environment::DSL_RUNNER_ACCESSOR}=", self
+            @environment.send "#{Environment::DSEL_RUNNER_ACCESSOR}=", self
 
             calling do
                 if block
@@ -59,9 +59,9 @@ class Base
             return if calling?
 
             # May not have been prepared yet.
-            return if !@environment.respond_to?( Environment::DSL_RUNNER_ACCESSOR )
+            return if !@environment.respond_to?( Environment::DSEL_RUNNER_ACCESSOR )
 
-            @environment.send "#{Environment::DSL_RUNNER_ACCESSOR}=", nil
+            @environment.send "#{Environment::DSEL_RUNNER_ACCESSOR}=", nil
         end
     end
 
@@ -94,7 +94,7 @@ class Base
     end
 
     # @private
-    def _dsl_runner
+    def _dsel_runner
         self
     end
 

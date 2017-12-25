@@ -32,7 +32,7 @@ shared_examples_for DSeL::DSL::Nodes::Base do
     describe '#run' do
         let(:script) do
             <<RUBY
-                real_self
+                _dsel_self
 RUBY
         end
         let(:file) do
@@ -59,7 +59,7 @@ RUBY
 
         describe '&block' do
             it 'runs the block within the context' do
-                expect(subject.run { real_self }).to be context
+                expect(subject.run { _dsel_self }).to be context
             end
         end
 
@@ -72,15 +72,15 @@ RUBY
         end
 
         context 'before running' do
-            it "sets ##{described_class::Environment::DSL_RUNNER_ACCESSOR}" do
-                expect(subject.run { _dsl_runner }).to be subject
+            it "sets ##{described_class::Environment::DSEL_RUNNER_ACCESSOR}" do
+                expect(subject.run { _dsel_runner }).to be subject
             end
         end
 
         context 'after running' do
-            it "removes ##{described_class::Environment::DSL_RUNNER_ACCESSOR}" do
-                subject.run { real_self }
-                expect(subject.environment._dsl_runner).to be_nil
+            it "removes ##{described_class::Environment::DSEL_RUNNER_ACCESSOR}" do
+                subject.run { _dsel_self }
+                expect(subject.environment._dsel_runner).to be_nil
             end
         end
     end
@@ -222,9 +222,9 @@ RUBY
         end
     end
 
-    describe '#_dsl_runner' do
+    describe '#_dsel_runner' do
         it 'returns self' do
-            expect(subject._dsl_runner).to be subject
+            expect(subject._dsel_runner).to be subject
         end
     end
 end

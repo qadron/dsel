@@ -12,10 +12,12 @@ class Direct < Base
     end
 
     def run( script = nil, &block )
-        super
-    ensure
-        return if calling?
-        restore_context
+        begin
+            super( script, &block )
+        ensure
+            return if calling? || !@prepared
+            restore_context
+        end
     end
 
     private
@@ -39,6 +41,7 @@ class Direct < Base
         decorate_context
 
         @environment = @context
+        @prepared    = true
     end
 
     def capture_context
@@ -75,6 +78,8 @@ class Direct < Base
         @original_methods.each do |m|
             @context.define_singleton_method m.name, &m
         end
+
+        @prepared = false
     end
 
 end

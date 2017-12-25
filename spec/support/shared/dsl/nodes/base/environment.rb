@@ -22,12 +22,38 @@ shared_examples_for DSeL::DSL::Nodes::Base::Environment do
     let(:another_node_context) { '3' }
 
     before do
-        subject.send( "#{described_class::DSL_RUNNER_ACCESSOR}=", node )
+        subject.send( "#{described_class::DSEL_RUNNER_ACCESSOR}=", node )
     end
 
     describe '#instance_variables' do
-        it "excludes #{described_class::DSL_RUNNER_IVAR}" do
-            expect(subject.instance_variables).to_not include described_class::DSL_RUNNER_IVAR
+        it "excludes #{described_class::DSEL_RUNNER_IVAR}" do
+            expect(subject.instance_variables).to_not include described_class::DSEL_RUNNER_IVAR
+        end
+    end
+
+    describe '#_dsel_shared_variables' do
+        it 'delegates to node' do
+            expect(subject._dsel_shared_variables).to be node.shared_variables
+        end
+    end
+
+    describe '#_dsel_root?' do
+        it 'delegates to node' do
+            expect(node).to receive(:root?).and_return(1)
+            expect(subject._dsel_root?).to be 1
+        end
+    end
+
+    describe '#_dsel_self' do
+        it 'returns the context' do
+            expect(subject._dsel_self).to be node.context
+        end
+    end
+
+    describe '#_dsel_variables' do
+        it 'returns instance variables' do
+            subject.instance_variable_set( :@tmp, 1 )
+            expect(subject._dsel_variables).to eq( tmp: 1 )
         end
     end
 
@@ -45,7 +71,7 @@ shared_examples_for DSeL::DSL::Nodes::Base::Environment do
 
             it 'runs the block in the parent' do
                 node = nil
-                p = proc { node = send( self.class::DSL_RUNNER_ACCESSOR ) }
+                p = proc { node = send( self.class::DSEL_RUNNER_ACCESSOR ) }
 
                 subject.Parent( &p )
 
@@ -69,7 +95,7 @@ shared_examples_for DSeL::DSL::Nodes::Base::Environment do
 
             it 'runs the block in the root' do
                 n = nil
-                p = proc { n = send( self.class::DSL_RUNNER_ACCESSOR ) }
+                p = proc { n = send( self.class::DSEL_RUNNER_ACCESSOR ) }
 
                 subject.Root( &p )
 

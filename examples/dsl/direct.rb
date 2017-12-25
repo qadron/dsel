@@ -1,6 +1,6 @@
 require 'dsel/ruby/object'
 
-MyClass.new.as_direct_dsl do
+MyClass.new.as_direct_dsel do
     p private_method
     # => :private
 
@@ -63,7 +63,7 @@ MyClass.new.as_direct_dsl do
     p Iv4 { @only_visible_to_Iv4 }
     # => true
 
-    set = create_set.as_direct_dsl do
+    set = create_set.as_direct_dsel do
         merge [1,2,3,4]
     end
 
