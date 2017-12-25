@@ -7,23 +7,33 @@ class API
 
 class Environment < Proxy::Environment
 
+    define_method "#{DSL_RUNNER_ACCESSOR}=" do |runner|
+        super( runner )
+
+        if runner
+            runner.context.class.children.keys.each do |name|
+                define_singleton_method name.capitalize do |&b|
+                    runner.runner_for( send( name ) ).run( &b )
+                end
+            end
+        end
+
+        runner
+    end
+
     def also( *args, &block )
+        # TODO: Store #last_call on Node at the instance level,
+        # this global state can be interfered with by other DSLs.
         last_call = DSeL::API::Generator.last_call
         type      = last_call[:type]
 
-        if last_call.include? :object
-            # Search in real_self.class.call_handlers to see if there is a handler
-            # that matches our possible object, if so treat it as object.
-            # If not, use the last object and assume arguments.
-            arguments_match_object = api.class.call_handlers.
-                find do |handler|
-                    handler[:type]  == type &&
-                        handler[:object] == args.first
-                end
+        # Check to see if there is a handler that matches our possible object.
+        # If so, treat it as object.
+        # If not, use the last object and assume arguments.
+        if last_call.include?( :object ) &&
+            !real_self.class.has_call_handler?( type, args.first )
 
-            if !arguments_match_object
-                args.unshift last_call[:object]
-            end
+            args.unshift last_call[:object]
         end
 
         send( type, *args, &block )
@@ -31,19 +41,8 @@ class Environment < Proxy::Environment
         self
     end
 
-    def api
-        real_self
-    end
-
-    def api_root
-        _dsl_runner.root.context
-    end
-
-    def api_parent
-        _dsl_runner.parent.context
-    end
-
 end
+
 end
 end
 end

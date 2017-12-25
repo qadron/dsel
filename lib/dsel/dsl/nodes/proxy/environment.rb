@@ -42,7 +42,7 @@ class Environment
     end
 
     def method_missing( name, *args, &block )
-        if real_self.respond_to?( name )
+        if _dsl_runner && real_self.respond_to?( name )
             return real_self.send( name, *args, &block )
         end
 
@@ -50,7 +50,7 @@ class Environment
     end
 
     def respond_to?( *args )
-        super( *args ) || real_self.respond_to?( *args )
+        super( *args ) || (_dsl_runner && real_self.respond_to?( *args ))
     end
 
 end

@@ -49,6 +49,10 @@ class Node
             @definers ||= []
         end
 
+        def has_call_handler?( type, *possible_object )
+            method_defined? Generator.call_handler_name( type, *possible_object )
+        end
+
         def call_handlers
             @call_handlers ||= []
         end

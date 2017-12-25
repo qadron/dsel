@@ -170,6 +170,31 @@ RSpec.describe DSeL::API::Node do
         end
     end
 
+    describe '.has_call_handler?' do
+        context 'when there is a call handler' do
+            it 'returns true' do
+                subject.define :on
+
+                subject.def_on {}
+                expect( subject ).to have_call_handler :on
+
+                subject.def_on( :stuff ) {}
+                expect( subject ).to have_call_handler :on, :stuff
+            end
+        end
+
+        context 'when there is no such call handler' do
+            it 'returns false'  do
+                expect( subject ).to_not have_call_handler :blah
+
+                subject.define :on
+
+                expect( subject ).to_not have_call_handler :on
+                expect( subject ).to_not have_call_handler :on, :stuff
+            end
+        end
+    end
+
     describe '.root?' do
         context 'when there is no parent' do
             it 'returns true' do
