@@ -1,3 +1,5 @@
+require 'dsel'
+
 api = DSeL::DSL::Nodes::APIBuilder.build :MyAPI do
     # Import external root declerations.
     import 'my_api/root'
