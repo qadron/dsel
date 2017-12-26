@@ -40,8 +40,7 @@ class Base
         end
 
         begin
-            prepare_environment
-            @environment._dsel_node = self
+            prepare
 
             calling do
                 if block
@@ -59,9 +58,9 @@ class Base
             return if calling?
 
             # May not have been prepared yet.
-            return if !@environment.respond_to?( :_dsel_node )
+            return if !@environment.respond_to?( Environment::DSEL_NODE_ACCESSOR )
 
-            @environment._dsel_node = nil
+            cleanup
         end
     end
 
@@ -99,6 +98,20 @@ class Base
     end
 
     private
+
+    def prepare
+        prepare_environment
+        @environment._dsel_node = self
+    end
+
+    def cleanup
+        @environment._dsel_node = nil
+        cleanup_environment
+    end
+
+    # @abstract
+    def cleanup_environment
+    end
 
     # @abstract
     def prepare_environment

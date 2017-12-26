@@ -11,41 +11,17 @@ class Direct < Base
     class Env
     end
 
-    def run( script = nil, &block )
-        begin
-            super( script, &block )
-        ensure
-            # Re-entry, don't touch anything.
-            return if calling?
-
-            # May not have been prepared yet.
-            return if !@environment.respond_to?( :_dsel_node )
-
-            restore_context
-        end
-    end
-
     private
-
-    def extend_env
-        [
-            Environment,
-            Mixins::Environment::IvarExplorer
-        ]
-    end
-
-    def reset_methods
-        [
-            :instance_variables,
-            :method_missing
-        ]
-    end
 
     def prepare_environment
         capture_context
         decorate_context
 
         @environment = @context
+    end
+
+    def cleanup_environment
+        restore_context
     end
 
     def capture_context
@@ -82,6 +58,20 @@ class Direct < Base
         @original_methods.each do |m|
             @context.define_singleton_method m.name, &m
         end
+    end
+
+    def extend_env
+        [
+            Environment,
+            Mixins::Environment::IvarExplorer
+        ]
+    end
+
+    def reset_methods
+        [
+            :instance_variables,
+            :method_missing
+        ]
     end
 
 end
