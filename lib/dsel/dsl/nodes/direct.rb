@@ -8,7 +8,18 @@ module Nodes
 class Direct < Base
     require_relative 'direct/environment'
 
-    class Env
+    def extend_env
+        [
+            Environment,
+            Mixins::Environment::IvarExplorer
+        ]
+    end
+
+    def reset_methods
+        [
+            :instance_variables,
+            :method_missing
+        ]
     end
 
     private
@@ -34,13 +45,10 @@ class Direct < Base
 
     def decorate_context
         # We could use @context.extend but that only works the first time.
-        env = Env.new
         extend_env.each do |mod|
-            env.extend mod
-
             mod.instance_methods( true ).each do |m|
                 @context.instance_eval do
-                    define_singleton_method m, &env.method( m )
+                    define_singleton_method m, mod.instance_method( m )
                 end
             end
         end
@@ -58,20 +66,6 @@ class Direct < Base
         @original_methods.each do |m|
             @context.define_singleton_method m.name, &m
         end
-    end
-
-    def extend_env
-        [
-            Environment,
-            Mixins::Environment::IvarExplorer
-        ]
-    end
-
-    def reset_methods
-        [
-            :instance_variables,
-            :method_missing
-        ]
     end
 
 end

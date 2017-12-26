@@ -80,7 +80,7 @@ RUBY
         context 'after running' do
             it "removes ##{described_class::Environment::DSEL_NODE_ACCESSOR}" do
                 subject.run { _dsel_self }
-                expect(subject.environment._dsel_node).to be_nil
+                expect(subject.environment.instance_variable_get(described_class::Environment::DSEL_NODE_IVAR)).to be_nil
             end
         end
     end

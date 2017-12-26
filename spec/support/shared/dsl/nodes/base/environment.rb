@@ -1,7 +1,12 @@
 require 'tempfile'
 
 shared_examples_for DSeL::DSL::Nodes::Base::Environment do
-    subject { Class.new( described_class ).new }
+    if !defined? :subject
+        subject do
+            Class.new( described_class ).new
+        end
+    end
+
     let(:node_class) do
         sep = '::'
         splits = described_class.to_s.split( sep )
@@ -71,7 +76,7 @@ shared_examples_for DSeL::DSL::Nodes::Base::Environment do
 
             it 'runs the block in the parent' do
                 node = nil
-                p = proc { node = send( self.class::DSEL_NODE_ACCESSOR ) }
+                p = proc { node = send( DSeL::DSL::Nodes::Base::Environment::DSEL_NODE_ACCESSOR ) }
 
                 subject.Parent( &p )
 
@@ -95,7 +100,7 @@ shared_examples_for DSeL::DSL::Nodes::Base::Environment do
 
             it 'runs the block in the root' do
                 n = nil
-                p = proc { n = send( self.class::DSEL_NODE_ACCESSOR ) }
+                p = proc { n = send( DSeL::DSL::Nodes::Base::Environment::DSEL_NODE_ACCESSOR ) }
 
                 subject.Root( &p )
 
