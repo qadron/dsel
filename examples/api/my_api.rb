@@ -2,10 +2,10 @@ require 'dsel'
 
 api = DSeL::DSL::Nodes::APIBuilder.build :MyAPI do
     # Import external root declerations.
-    import 'my_api/root'
+    import_relative 'my_api/root'
 
     # You can also use globs to import multiple files.
-    # import_many 'my_api/children/*'
+    # import_relative_many 'my_api/children/*'
 
     p self
     # => MyAPI
@@ -72,7 +72,7 @@ api = DSeL::DSL::Nodes::APIBuilder.build :MyAPI do
     describe 'This section handles...other stuff.'
     child :section_2, :Section_2 do
         # Import some decleration for this section.
-        import 'my_api/sections/section_2'
+        import_relative 'my_api/sections/section_2'
 
         def_after :more_stuff do |*args|
             p :more_stuff
