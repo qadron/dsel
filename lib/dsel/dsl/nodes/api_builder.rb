@@ -12,7 +12,7 @@ class APIBuilder < Nodes::Direct
 
         node = new( *args )
         node.run( &block )
-        node.context
+        node.subject
     end
 
     API_NODE = DSeL::API::Node
@@ -32,23 +32,23 @@ class APIBuilder < Nodes::Direct
             rescue NameError
             end
 
-            context = namespace.const_set( node, Class.new( @superclass ) )
+            subject = namespace.const_set( node, Class.new( @superclass ) )
 
         elsif node.is_a?( Class ) && node < DSeL::API::Node
-            context = node
+            subject = node
 
         else
             fail ArgumentError,
                  "Expected #{Symbol} or #{DSeL::API::Node}, got: #{node.inspect}"
         end
 
-        super( context, options )
+        super( subject, options )
     end
 
     # @private
-    def node_for( context, options = {} )
-        super( context, options.merge(
-            namespace:  @context,
+    def node_for( subject, options = {} )
+        super( subject, options.merge(
+            namespace:  @subject,
             superclass: @superclass
         ))
     end

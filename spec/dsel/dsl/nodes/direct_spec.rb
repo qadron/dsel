@@ -5,7 +5,7 @@ RSpec.describe DSeL::DSL::Nodes::Direct do
 
     it 'uses the context as the environment' do
         subject.run{}
-        expect(subject.environment).to be subject.context
+        expect(subject.environment).to be subject.subject
     end
 
     describe '#run' do

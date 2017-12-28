@@ -14,7 +14,7 @@ RSpec.describe DSeL::DSL::Nodes::APIBuilder do
 
     it 'uses the context as the environment' do
         subject.run{}
-        expect(subject.environment).to be subject.context
+        expect(subject.environment).to be subject.subject
     end
 
     describe '.build' do
@@ -50,7 +50,7 @@ RSpec.describe DSeL::DSL::Nodes::APIBuilder do
 
                     it 'uses it as a context' do
                         subject
-                        expect(subject.context).to be klass
+                        expect(subject.subject).to be klass
                     end
 
                     context 'when the name has already been taken' do
@@ -68,7 +68,7 @@ RSpec.describe DSeL::DSL::Nodes::APIBuilder do
                     let(:context){ clean_api_spec }
 
                     it 'uses it as a context' do
-                        expect(subject.context).to be clean_api_spec
+                        expect(subject.subject).to be clean_api_spec
                     end
                 end
 
@@ -97,7 +97,7 @@ RSpec.describe DSeL::DSL::Nodes::APIBuilder do
                     end
 
                     it 'is placed under that namespace' do
-                        subject.context
+                        subject.subject
                         expect(namespace.constants).to include name
                     end
                 end
@@ -109,7 +109,7 @@ RSpec.describe DSeL::DSL::Nodes::APIBuilder do
                     end
 
                     it 'sets the API node superclass' do
-                        expect(subject.context).to be < superclass
+                        expect(subject.subject).to be < superclass
                     end
 
                     context "when not an #{DSeL::API::Node} subclass" do
@@ -130,7 +130,7 @@ RSpec.describe DSeL::DSL::Nodes::APIBuilder do
         let(:child_node) { subject.node_for( child_name ) }
 
         it 'uses the current context as the namespace' do
-            expect(child_node.context).to be subject.context.const_get( child_name )
+            expect(child_node.subject).to be subject.subject.const_get( child_name )
         end
 
         context 'when a superclass has been set' do
@@ -140,7 +140,7 @@ RSpec.describe DSeL::DSL::Nodes::APIBuilder do
             end
 
             it 'uses it as the superclass' do
-                expect(child_node.context).to be < superclass
+                expect(child_node.subject).to be < superclass
             end
         end
     end

@@ -11,7 +11,7 @@ class Environment < Proxy::Environment
         super( node )
 
         if node
-            node.context.class.children.keys.each do |name|
+            node.subject.class.children.keys.each do |name|
                 define_singleton_method name.capitalize do |&b|
                     node.node_for( send( name ) ).run( &b )
                 end

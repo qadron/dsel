@@ -25,46 +25,46 @@ class Direct < Base
     private
 
     def prepare_environment
-        capture_context
-        decorate_context
+        capture_subject
+        decorate_subject
 
-        @environment = @context
+        @environment = @subject
     end
 
     def cleanup_environment
-        restore_context
+        restore_subject
     end
 
-    def capture_context
+    def capture_subject
         @original_methods = reset_methods.map do |m|
-            @context.instance_eval do
+            @subject.instance_eval do
                 method( m ) if respond_to? m
             end
         end.compact
     end
 
-    def decorate_context
-        # We could use @context.extend but that only works the first time.
+    def decorate_subject
+        # We could use @subject.extend but that only works the first time.
         extend_env.each do |mod|
             mod.instance_methods( true ).each do |m|
-                @context.instance_eval do
+                @subject.instance_eval do
                     define_singleton_method m, mod.instance_method( m )
                 end
             end
         end
     end
 
-    def restore_context
-        cmethods = @context.methods
+    def restore_subject
+        cmethods = @subject.methods
         extend_env.each do |mod|
             mod.instance_methods( true ).each do |m|
                 next if !cmethods.include?( m )
-                @context.instance_eval( "undef :'#{m}'" )
+                @subject.instance_eval( "undef :'#{m}'" )
             end
         end
 
         @original_methods.each do |m|
-            @context.define_singleton_method m.name, &m
+            @subject.define_singleton_method m.name, &m
         end
     end
 

@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe DSeL::API::Node do
+    it_should_behave_like DSeL::Node
+
     subject { Factory[:clean_api_spec] }
     let(:other) { Factory[:clean_api_spec] }
     let(:another) { Factory[:clean_api_spec] }
@@ -243,27 +245,16 @@ RSpec.describe DSeL::API::Node do
             expect(api.blah).to be_kind_of other
             expect(api.blah).to be api.blah
         end
-
-        context 'when arguments are given' do
-            it 'uses them to initialize the child' do
-                args = [1, 2, 3]
-
-                subject.push_child :another, another, *args
-                expect(another).to receive(:new).with(*args)
-
-                api.another
-            end
-        end
     end
 
     describe '.push_children' do
         it 'delegates to .push_child' do
             expect(subject).to receive(:push_child).with(:blah, other)
-            expect(subject).to receive(:push_child).with(:another, another, 1, 2)
+            expect(subject).to receive(:push_child).with(:another, another)
 
             subject.push_children(
                 blah:    other,
-                another: [another,1,2]
+                another: another
             )
         end
     end

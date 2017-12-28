@@ -19,11 +19,11 @@ module IvarExplorer
     # @private
     def _dsel_node_for_ivar( ivar, &block )
         ivar = ivar.downcase
-        if !_dsel_node.context.instance_variable_defined?( ivar )
+        if !_dsel_node.subject.instance_variable_defined?( ivar )
             fail ArgumentError, "Instance variable not defined: #{ivar}"
         end
 
-        _dsel_node.node_for( _dsel_node.context.instance_variable_get( ivar ) ).run( &block )
+        _dsel_node.node_for( _dsel_node.subject.instance_variable_get( ivar ) ).run( &block )
     end
 
 end

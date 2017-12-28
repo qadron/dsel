@@ -13,7 +13,7 @@ class Environment
         super( node )
 
         if node
-            _dsel_node.context.public_methods( false ).each do |m|
+            _dsel_node.subject.public_methods( false ).each do |m|
                 instance_eval( "undef :'#{m}'" ) rescue nil
             end
         end

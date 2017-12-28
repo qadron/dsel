@@ -77,7 +77,7 @@ RUBY
 
     describe '#child' do
         it 'adds a child node' do
-            subject.child :child, :Child, 1, 2, 3 do
+            subject.child :child, :Child do
             end
 
             expect(subject.children).to eq(

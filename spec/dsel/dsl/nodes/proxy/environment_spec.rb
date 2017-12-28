@@ -24,7 +24,7 @@ RSpec.describe DSeL::DSL::Nodes::Proxy::Environment do
     describe "##{described_class::DSEL_NODE_ACCESSOR}=" do
         context 'when a node is given' do
             it 'undefines methods with the same name as the context' do
-                expect(subject.hash).to eq node.context.hash
+                expect(subject.hash).to eq node.subject.hash
             end
         end
 

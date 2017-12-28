@@ -2,7 +2,7 @@ module DSeL
 module API
 
 # @author Tasos "Zapotek" Laskos <tasos.laskos@sarosys.com>
-class Node
+class Node < Node
 
     def self.inherited( base )
         base.extend ClassMethods
@@ -89,7 +89,7 @@ class Node
             nil
         end
 
-        def push_child( name, node, *args )
+        def push_child( name, node )
             node.set_parent( self )
 
             child = {
@@ -113,7 +113,7 @@ class Node
                 v = instance_variable_get( ivar )
                 return v if v
 
-                instance_variable_set( ivar, node.new( *args ) )
+                instance_variable_set( ivar, node.new( @subject, parent: self ) )
             end
 
             child

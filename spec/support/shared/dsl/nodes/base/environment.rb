@@ -44,7 +44,7 @@ shared_examples_for DSeL::DSL::Nodes::Base::Environment do
 
     describe '#_dsel_self' do
         it 'returns the context' do
-            expect(subject._dsel_self).to be node.context
+            expect(subject._dsel_self).to be node.subject
         end
     end
 

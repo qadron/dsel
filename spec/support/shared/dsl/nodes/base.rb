@@ -1,6 +1,8 @@
 require 'tempfile'
 
 shared_examples_for DSeL::DSL::Nodes::Base do
+    include_examples DSeL::Node
+
     subject { described_class.new( context, options ) }
     let(:options) { {} }
     let(:context) { '2' }
@@ -10,24 +12,6 @@ shared_examples_for DSeL::DSL::Nodes::Base do
     let(:other_context) { '1' }
 
     let(:other_dup)  { described_class.new( other_context, other_options ) }
-
-    describe '#initialize' do
-        describe 'context' do
-            it 'sets the DSL context' do
-                expect(subject.context).to be context
-            end
-        end
-
-        describe 'options' do
-            describe ':parent' do
-                let(:options) { { parent: other } }
-
-                it 'sets the parent' do
-                    expect(subject.parent).to be other
-                end
-            end
-        end
-    end
 
     describe '#run' do
         let(:script) do
@@ -85,6 +69,17 @@ RUBY
         end
     end
 
+    describe '#shared_variables' do
+        let(:other_options) { { parent: subject } }
+
+        it 'provides shared access to a hash' do
+            other.shared_variables[1] = 2
+            expect(subject.shared_variables).to eq(  1 => 2 )
+
+            expect(subject.shared_variables).to be other.shared_variables
+        end
+    end
+
     describe '#nodes' do
         it 'includes self' do
             expect(subject.nodes.values).to eq [subject]
@@ -104,36 +99,6 @@ RUBY
 
             it "delegates to root's #nodes" do
                 expect(other.nodes).to be subject.nodes
-            end
-        end
-    end
-
-    describe '#shared_variables' do
-        let(:other_options) { { parent: subject } }
-
-        it 'provides shared access to a hash' do
-            other.shared_variables[1] = 2
-            expect(subject.shared_variables).to eq(  1 => 2 )
-
-            expect(subject.shared_variables).to be other.shared_variables
-        end
-    end
-
-    describe '#root?' do
-        context 'when root' do
-            let(:other_options) { { parent: subject } }
-
-            it 'returns true' do
-                other
-                expect(subject).to be_root
-            end
-        end
-
-        context 'when not root' do
-            let(:other_options) { { parent: subject } }
-
-            it 'returns false' do
-                expect(other).to_not be_root
             end
         end
     end
@@ -174,7 +139,7 @@ RUBY
 
         context 'when given a unique context' do
             it 'returns a node' do
-                expect(node.context).to be other_context
+                expect(node.subject).to be other_context
             end
 
             it 'stores it' do
@@ -201,30 +166,6 @@ RUBY
             it 'sets self as #parent' do
                 expect(node.parent).to be subject
             end
-        end
-    end
-
-    describe '#hash' do
-        it 'takes into account .class' do
-            h1 = subject.hash
-
-            expect(subject).to receive(:class).and_return( Object )
-
-            expect(h1).to_not eq subject.hash
-        end
-
-        it 'takes into account context#object_id' do
-            h1 = subject.hash
-
-            expect(subject.context).to receive(:object_id).and_return( 1 )
-
-            expect(h1).to_not eq subject.hash
-        end
-    end
-
-    describe '#_dsel_node' do
-        it 'returns self' do
-            expect(subject._dsel_node).to be subject
         end
     end
 end

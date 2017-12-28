@@ -33,15 +33,15 @@ module Environment
         node = _dsel_node.node_for( class_name )
         node.run( &block )
 
-        _dsel_node.context.push_child(
+        _dsel_node.subject.push_child(
             method_name,
-            node.context,
+            node.subject,
             *args
         )
     end
 
     def _dsel_import( file )
-        _dsel_node.context.instance_eval( IO.read( file ) )
+        _dsel_node.subject.instance_eval( IO.read( file ) )
     end
 
     def _dsel_caller_dir( offset = 1 )

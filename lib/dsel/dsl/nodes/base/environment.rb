@@ -20,7 +20,7 @@ module Environment
     end
 
     def _dsel_self
-        _dsel_node.context
+        _dsel_node.subject
     end
 
     def _dsel_variables
