@@ -42,13 +42,6 @@ shared_examples_for DSeL::DSL::Nodes::Base::Environment do
         end
     end
 
-    describe '#_dsel_root?' do
-        it 'delegates to node' do
-            expect(node).to receive(:root?).and_return(1)
-            expect(subject._dsel_root?).to be 1
-        end
-    end
-
     describe '#_dsel_self' do
         it 'returns the context' do
             expect(subject._dsel_self).to be node.context

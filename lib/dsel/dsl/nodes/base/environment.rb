@@ -19,10 +19,6 @@ module Environment
         _dsel_node.shared_variables
     end
 
-    def _dsel_root?
-        _dsel_node.root?
-    end
-
     def _dsel_self
         _dsel_node.context
     end
@@ -36,13 +32,13 @@ module Environment
     end
 
     def Parent( &block )
-        fail 'Already root.' if _dsel_root?
+        fail 'Already root.' if _dsel_node.root?
 
         _dsel_node.parent.run( &block )
     end
 
     def Root( &block )
-        fail 'Already root.' if _dsel_root?
+        fail 'Already root.' if _dsel_node.root?
         _dsel_node.root.run( &block )
     end
 
