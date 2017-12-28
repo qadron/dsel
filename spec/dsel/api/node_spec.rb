@@ -6,7 +6,7 @@ RSpec.describe DSeL::API::Node do
     subject { Factory[:clean_api_spec] }
     let(:other) { Factory[:clean_api_spec] }
     let(:another) { Factory[:clean_api_spec] }
-    let(:api) { subject.new }
+    let(:api) { subject.new( Object.new ) }
 
     describe '.define' do
         it "delegates to #{DSeL::API::Generator}#define_definers" do
@@ -229,8 +229,9 @@ RSpec.describe DSeL::API::Node do
 
     describe '.push_child' do
         before do
-            subject.push_child :blah, other
+            subject.push_child :blah, other, s
         end
+        let(:s) { nil }
 
         it 'sets the given node as a child' do
             expect(subject.children).to eq(
@@ -244,6 +245,32 @@ RSpec.describe DSeL::API::Node do
         it 'creates an instance method for access' do
             expect(api.blah).to be_kind_of other
             expect(api.blah).to be api.blah
+        end
+
+        context 'when given a subject' do
+            context 'Symbol' do
+                let(:s) { :hash }
+
+                it 'sends it to the parent subject and uses the result as a subject' do
+                    expect(api.blah.subject).to be api.subject.hash
+                end
+            end
+
+            context '#call' do
+                let(:s) { proc { |o| o.hash } }
+
+                it 'uses the result as a subject' do
+                    expect(api.blah.subject).to be api.subject.hash
+                end
+            end
+
+            context 'other' do
+                it 'raises ArgumentError' do
+                    expect do
+                        subject.push_child :another, another, ''
+                    end.to raise_error ArgumentError
+                end
+            end
         end
     end
 

@@ -89,7 +89,11 @@ class Node < Node
             nil
         end
 
-        def push_child( name, node )
+        def push_child( name, node, s = nil )
+            if s && !s.is_a?( Symbol ) && !s.respond_to?( :call )
+                fail ArgumentError, 'Subject not Symbol nor responds to #call.'
+            end
+
             node.set_parent( self )
 
             child = {
@@ -113,7 +117,16 @@ class Node < Node
                 v = instance_variable_get( ivar )
                 return v if v
 
-                instance_variable_set( ivar, node.new( @subject, parent: self ) )
+                sub = @subject
+                if s.is_a?( Symbol )
+                    sub = sub.send( s )
+                end
+
+                if s.respond_to?( :call )
+                    sub = s.call( sub )
+                end
+
+                instance_variable_set( ivar, node.new( sub, parent: self ) )
             end
 
             child
