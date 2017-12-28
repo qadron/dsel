@@ -34,7 +34,7 @@ class Node
     end
 
     def hash
-        "#{self.class}:#{@subject.object_id}".hash
+        calc_node_hash( @subject )
     end
 
 end
