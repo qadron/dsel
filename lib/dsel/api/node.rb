@@ -1,7 +1,6 @@
 module DSeL
 module API
 
-# @author Tasos "Zapotek" Laskos <tasos.laskos@sarosys.com>
 class Node < Node
 
     def self.inherited( base )

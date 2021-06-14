@@ -50,7 +50,7 @@ It is:
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'dsel', github: 'sarosys/dsel'
+gem 'dsel', github: 'qadron/dsel'
 ```
 
 And then execute:
@@ -59,7 +59,7 @@ And then execute:
 
 ## Examples
 
-See: [examples/](https://github.com/sarosys/dsel/tree/master/examples/)
+See: [examples/](https://github.com/qadron/dsel/tree/master/examples/)
 
 ### API
 
@@ -81,11 +81,11 @@ Use via a Ruby script:
 require 'examples/api/my_api_ruby'
 ````
 
-See: [examples/api/](https://github.com/sarosys/dsel/tree/master/examples/api/)
+See: [examples/api/](https://github.com/qadron/dsel/tree/master/examples/api/)
 
 ### DSL
 
-See: [examples/dsl/object.rb](https://github.com/sarosys/dsel/tree/master/examples/dsl/object.rb)
+See: [examples/dsl/object.rb](https://github.com/qadron/dsel/tree/master/examples/dsl/object.rb)
 
 #### Proxy
 
@@ -94,7 +94,7 @@ just proxy methods, thus allowing the user to interact with the object as if
 operating within it semantically but without access to non-public methods or its 
 state.
 
-See: [examples/dsl/proxy.rb](https://github.com/sarosys/dsel/tree/master/examples/dsl/proxy.rb)
+See: [examples/dsl/proxy.rb](https://github.com/qadron/dsel/tree/master/examples/dsl/proxy.rb)
 
 #### Direct
 
@@ -102,20 +102,12 @@ The direct way means not having the object inside the environment, but the
 environment inside the object, thus allowing you to truly operate within it and 
 make a general mess of things or do some pretty cool stuff.
 
-See: [examples/dsl/direct.rb](https://github.com/sarosys/dsel/tree/master/examples/dsl/direct.rb)
+See: [examples/dsl/direct.rb](https://github.com/qadron/dsel/tree/master/examples/dsl/direct.rb)
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/sarosys/dsel.
+Bug reports and pull requests are welcome on GitHub at https://github.com/qadron/dsel.
 
 ## License
 
-MIT License
-
-Copyright (c) 2018 [Sarosys LLC](http://www.sarosys.com/).
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Please see the `LICENSE.md` file.
