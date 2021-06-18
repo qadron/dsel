@@ -100,34 +100,35 @@ class Generator
     # @private
     def calling( node, type, handler, args, *possible_object, &block )
         synchronize do
-            begin
-                @last_call = {
-                    node: node,
-                    type: type
-                }
+            @last_call = {
+                node: node,
+                type: type
+            }
 
-                if !possible_object.empty?
-                    @last_call.merge!( object: possible_object.first )
-                end
+            if !possible_object.empty?
+                @last_call.merge!( object: possible_object.first )
+            end
 
-                @last_call.merge!(
-                    handler: handler,
-                    args:    args
-                )
+            @last_call.merge!(
+                handler: handler,
+                args:    args
+            )
 
-                if last_call_with_caller?
-                    @last_call[:caller] = caller
-                end
-
-                t = Time.now
-                r = block.call
-                @last_call[:time] = Time.now - t
-
-                call_on_call( @last_call )
-
-                r
+            if last_call_with_caller?
+                @last_call[:caller] = caller
             end
         end
+
+        t = Time.now
+        r = block.call
+        spent = Time.now - t
+
+        synchronize do
+            @last_call[:time] = spent
+            call_on_call( @last_call )
+        end
+
+        r
     end
 
     # @private
@@ -225,11 +226,12 @@ class Generator
                     with_object = Generator.call_handler_with_object_name( __method__, object )
 
                     if respond_to?( with_object )
+                        r = nil
                         Generator.calling( self.class, type, with_object, args, object ) do
-                            send( with_object, *args, &block )
+                            r = send( with_object, *args, &block )
                         end
 
-                        return self
+                        return r.nil? ? self : (r == :nil ? nil :r)
                     end
 
                     args.unshift object
@@ -237,11 +239,13 @@ class Generator
 
                 catch_all = Generator.call_handler_catch_all_name( __method__ )
                 if respond_to?( catch_all )
+
+                    r = nil
                     Generator.calling( self.class, type, catch_all, args ) do
-                        send( catch_all, *args, &block )
+                        r = send( catch_all, *args, &block )
                     end
 
-                    return self
+                    return r.nil? ? self : r
                 end
 
                 fail NoMethodError,

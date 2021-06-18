@@ -32,10 +32,8 @@ api = DSeL::DSL::Nodes::APIBuilder.build :MyAPI do
         describe 'Handles stuff that happen when other other stuff are about to happen.'
         configure generator:  { do: :stuff },
                   node:       { do: :other_stuff }
-        define :on # Enables 'def_on'.
 
         describe 'Handles stuff that happen after other stuff.'
-        define :after # Enables 'def_after'.
 
         describe 'This does that and some other stuff some times...'
         configure api: { do: :other_stuff },
@@ -54,8 +52,6 @@ api = DSeL::DSL::Nodes::APIBuilder.build :MyAPI do
         child :section_1_0, :Section_1_0 do
             p self
             # => MyAPI::Section_1::Section_1_0
-
-            define :before
 
             def_before :this do |*args|
                 p :this

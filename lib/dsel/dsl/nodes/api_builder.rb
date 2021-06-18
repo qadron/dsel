@@ -26,10 +26,8 @@ class APIBuilder < Nodes::Direct
         if node.is_a?( Symbol )
             namespace = options[:namespace]  || Object
 
-            begin
-                c = namespace.const_get( node )
+            if namespace.constants.include?( node )
                 fail ArgumentError, "Node name taken: #{c.inspect}"
-            rescue NameError
             end
 
             subject = namespace.const_set( node, Class.new( @superclass ) )

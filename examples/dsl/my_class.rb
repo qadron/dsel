@@ -1,3 +1,5 @@
+require 'set'
+
 class MyClass
 
     def initialize

@@ -1,4 +1,6 @@
+require 'dsel'
 require 'dsel/ruby/object'
+require_relative 'my_class'
 
 MyClass.new.as_dsel do
     # p private_method

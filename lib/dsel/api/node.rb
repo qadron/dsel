@@ -221,6 +221,18 @@ class Node < Node
             definer
         end
 
+        def method_missing( m, *args, &block )
+            ms = m.to_s
+            if ms.start_with? 'def_'
+                to_define = ms.split( 'def_', 2 ).last
+                define to_define
+
+                send m, *args, &block
+            else
+                super( m, *args, &block )
+            end
+        end
+
     end
 
 end

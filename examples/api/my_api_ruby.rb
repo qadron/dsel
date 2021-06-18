@@ -1,3 +1,5 @@
+require_relative 'my_api'
+
 p self.class
 # => Object
 
