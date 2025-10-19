@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
     s.version  = DSeL::VERSION
     s.email    = 'tasos.laskos@gmail.com'
     s.authors  = [ 'Tasos Laskos' ]
-    s.licenses = ['MIT']
+    s.licenses = ['MPL v2']
 
     s.summary  = %q{DSL/API generator and runner.}
     s.homepage = 'https://github.com/qadron/dsel'
